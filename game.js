@@ -17,15 +17,11 @@ function nextSequence() {
     $("#level-title").text("Level: " + level);
     randomChosenColour = buttonColours[Math.floor(Math.random() * Math.floor(4))];
     gamePattern.push(randomChosenColour);
-    console.log(gamePattern + " game pattern");
     for (let i = 0; i < gamePattern.length; i++) {
         // figure out why it doesn't show everything in the pattern or not correctly
         setTimeout(function() {
-            console.log("Showing pattern " + i);
-            console.log("Showing pattern for " + gamePattern[i]);
             handleClick($("." + gamePattern[i]));
             userClickedPattern = [];
-            console.log("User pattern deleted");
             }, 200 + i*300);
     }
 
@@ -55,7 +51,6 @@ function handleClick(btn) {
     clickSound = buttonSounds[btn.attr("id")];
     userChosenColour = btn.attr("id");
     userClickedPattern.push(userChosenColour);
-    console.log("Pushed to user pattern " + userChosenColour);
     btn.addClass("pressed");
     setTimeout(function() {
         btn.removeClass("pressed");
@@ -69,10 +64,8 @@ function checkPlay(btn) {
         console.log(gamePattern + " - " + userClickedPattern);
         for (var i = 0; i < userClickedPattern.length; i++) {
             if (userClickedPattern[i] !== gamePattern[i]) {
-                console.log("Wrong sequence");
                 endGame();
             } else if (i === gamePattern.length - 1) {
-                console.log("Same pattern and finished sequence");
                 nextSequence();
             }
             console.log("Right colour");
@@ -81,7 +74,13 @@ function checkPlay(btn) {
 }
 
 function endGame() {
-    $("#level-title").text("You lost at level " + level);
+    $("#level-title").text("You lost at level " + level + " press any key to restart");
+    $("body").addClass("game-over");
+    setTimeout(function() {
+        $("body").removeClass("game-over");
+    }, 200);
+    buttonSounds["wrong"].currentTime = 0;
+    buttonSounds["wrong"].play();
     level = 0;
     gamePattern = [];
     userClickedPattern = [];
